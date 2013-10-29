@@ -9,54 +9,104 @@ function Start () {
 //var newTriangles : int[];
 
 var __angle: float;
-var size: int = 100;
+var size: int = 5;
 var height_map_z:int = 0;
 
 var x_i:float;
 var y_i:float;
 var z_i:float;
 
-var center_x:float;
-var center_z:float;
+var x:float;
+var y:float;
+var z:float;
+var q:float;
+var r:float;
 var idx:int;
 
 var verts:Array;
 var tris:Array;
 var uvs:Array;
 
+var sides:int = 6;
+
+var map:Array = new Array(
+	0, 0, 0, 0, 0, 0,
+	0, 1, 0, 1, 1, 0,
+	0, 1, 1, 1, 1, 0,
+	0, 0, 1, 0, 0, 0,
+	0, 1, 1, 1, 1, 0,
+	0, 0, 1, 1, 1, 0,
+	0, 0, 0, 0, 0, 0
+);
+
 function Update () {
 	var mesh : Mesh = GetComponent(MeshFilter).mesh;
 	mesh.Clear();
 	// Do some calculations...
-	center_x = 0;
-	center_z = 0;
+	x = 0;
+	y = 0;
+	z = 0;
 	idx = 0;
 	verts = new Array();
 	tris = new Array();
 	uvs = new Array();
-	for(var i:int = 0; i < 6; i++) {
-		__angle = ((2 * Mathf.PI) / 6) * i;
-		x_i = center_x + size * Mathf.Cos(__angle) + gameObject.transform.position.x;
-		y_i = 0;
-		z_i = center_z + size * Mathf.Sin(__angle) + gameObject.transform.position.z;
-		verts.Push(Vector3(x_i, y_i, z_i));		
-		uvs.Push(Vector2(0, 0));
-	}
 	
-	tris.Push(0);
-	tris.Push(2);
-	tris.Push(1);
-	tris.Push(0);
-	tris.Push(3);
-	tris.Push(2);
-	tris.Push(0);
-	tris.Push(4);
-	tris.Push(3);
-	tris.Push(0);
-	tris.Push(5);
-	tris.Push(4);
+	for(var m:int = 0; m < map.length; m++) {
+		q = m % 6;
+		r = Mathf.FloorToInt(m / 6);
+		
+		x = q * size * 1.5;
+		z = ((r * Mathf.Sqrt(3)) + ((q % 2) * Mathf.Sqrt(3)/2)) * size; //- ((q - ()) * ( * (size * 1.5))) ;
+		y = -x - z;
+		y = gameObject.transform.position.y;
 
-	
+		
+		
+		// center vert
+		verts.Push(Vector3(x, y, z));		
+		uvs.Push(Vector2(x % 2, z % 2));
+		
+		for(var i:int = 0; i < sides; i++) {
+			__angle = ((2 * Mathf.PI) / 6) * i;
+			x_i = x + (size * Mathf.Cos(__angle)) + gameObject.transform.position.x;
+			y_i = y + gameObject.transform.position.x;
+			z_i = z + (size * Mathf.Sin(__angle)) + gameObject.transform.position.z;
+			verts.Push(Vector3(x_i, y_i, z_i));		
+			uvs.Push(Vector2(x_i % 2, z_i % 2));
+			
+			tris.Push(idx);
+			if(i + 1 == sides) {
+				tris.Push(idx + 1);	
+			} else {
+				tris.Push(idx + i + 2);
+			}
+			tris.Push(idx + i + 1);
+			
+		}
+		
+		idx += 7;
+	}
+
+//	verts.Push(Vector3(x, y, z));		
+//	uvs.Push(Vector2(x % 2, z % 2));
+//
+//	for(var i:int = 0; i < sides; i++) {
+//		__angle = ((2 * Mathf.PI) / 6) * i;
+//		x_i = x + (size * Mathf.Cos(__angle)) + gameObject.transform.position.x;
+//		y_i = y;
+//		z_i = z + (size * Mathf.Sin(__angle)) + gameObject.transform.position.z;
+//		verts.Push(Vector3(x_i, y_i, z_i));		
+//		uvs.Push(Vector2(x_i % 2, z_i % 2));
+//		
+//		tris.Push(idx);
+//		if(i + 1 == sides) {
+//			tris.Push(idx + 1);	
+//		} else {
+//			tris.Push(idx + i + 2);
+//		}
+//		tris.Push(idx + i + 1);
+//		
+//	}
 	
 	
 	mesh.vertices = verts.ToBuiltin(Vector3) as Vector3[];
