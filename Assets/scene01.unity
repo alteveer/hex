@@ -215,11 +215,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   __angle: 0
-  size: 5
+  size: 1
   height_map_z: 0
   x_i: 0
   y_i: 0
   z_i: 0
+  tiling_u: 1
+  tiling_v: 1
   x: 0
   y: 0
   z: 0
