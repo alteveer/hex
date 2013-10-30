@@ -229,6 +229,13 @@ MonoBehaviour:
   r: 0
   idx: 0
   sides: 6
+  map_width: 40
+  map_height: 40
+  ISLAND_FACTOR: 1.07000005
+  bumps: 0
+  startAngle: 0
+  dipAngle: 0
+  dipWidth: 0
 --- !u!1 &1390709680
 GameObject:
   m_ObjectHideFlags: 0
