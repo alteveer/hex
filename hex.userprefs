@@ -2,17 +2,11 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\hexmap.js">
     <Files>
-      <File FileName="Assets\hexmap.js" Line="149" Column="4" />
+      <File FileName="Assets\hexmap.js" Line="11" Column="26" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="C:\Users\coal\prj\hex\Assets\hexmap.js" line="61" />
-      <Breakpoint file="C:\Users\coal\prj\hex\Assets\hexmap.js" line="55" />
-      <Breakpoint file="C:\Users\coal\prj\hex\Assets\hexmap.js" line="63" />
-      <Breakpoint file="C:\Users\coal\prj\hex\Assets\hexmap.js" line="65" />
-      <Breakpoint file="C:\Users\coal\prj\hex\Assets\hexmap.js" line="76" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

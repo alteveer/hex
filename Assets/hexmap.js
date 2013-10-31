@@ -31,8 +31,8 @@ var uvs:Array;
 
 var sides:int = 6;
 
-var map_width = 100;
-var map_height = 100;
+var map_width = 90;
+var map_height = 60;
 
 var map:boolean[];
 
@@ -41,24 +41,6 @@ var bumps:int;
 var startAngle:float;
 var dipAngle:float;
 var dipWidth:float;
-
-function Start () {
-	bumps = Random.Range(1, 6);
-	startAngle = Random.Range(0, 2*Mathf.PI);
-	dipAngle = Random.Range(0, 2*Mathf.PI);
-	dipWidth = Random.Range(0.2, 0.7);
-	
-	map = new boolean[map_width * map_height];
-	for(var m:int = 0; m < map.length; m++) {
-		map[m] = inside(
-			(m % map_width) - map_width/2, 
-			Mathf.FloorToInt(m / map_width) - map_width/2
-		);
-		//map[m] = true;
-	}
-	
-
-}
 
 function inside(x:int, y:int):boolean {
   var angle:float = Mathf.Atan2(y, x);
@@ -75,18 +57,40 @@ function inside(x:int, y:int):boolean {
 }
 
 
-
-function Update () {
-
-	//map = new boolean[map_width * map_height];
-	for(var n:int = 0; n < map.length; n++) {
-		map[n] = inside(
-			(n % map_width) - map_width/2, 
-			Mathf.FloorToInt(n / map_width) - map_width/2
+function generate_randoms() {
+	bumps = Random.Range(1, 6);
+	startAngle = Random.Range(0, 2*Mathf.PI);
+	dipAngle = Random.Range(0, 2*Mathf.PI);
+	dipWidth = Random.Range(0.2, 0.7);
+}
+function regenerate_map() {
+	map = new boolean[map_width * map_height];
+	for(var m:int = 0; m < map.length; m++) {
+		map[m] = inside(
+			(m % map_width) - map_width/2, 
+			Mathf.FloorToInt(m / map_width) - map_height/2
 		);
 		//map[m] = true;
 	}
 
+
+}
+
+function Start () {
+	generate_randoms();
+	regenerate_map();
+}
+
+var update_mesh = true;
+
+function Update () {
+	if(update_mesh) {
+		regenerate_map();
+		rebuild_mesh();
+	}
+}
+
+function rebuild_mesh() {
 	var mesh : Mesh = GetComponent(MeshFilter).mesh;
 	mesh.Clear();
 	// Do some calculations...
