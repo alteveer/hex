@@ -214,6 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8f14b21650540941abae370d3e97cd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  threshold: 2.79999995
   __angle: 0
   size: 1
   height_map_z: 0
@@ -229,9 +230,10 @@ MonoBehaviour:
   r: 0
   idx: 0
   sides: 6
-  map_width: 40
-  map_height: 40
-  ISLAND_FACTOR: 1.07000005
+  map_width: 100
+  map_height: 100
+  map: 
+  ISLAND_FACTOR: 10
   bumps: 0
   startAngle: 0
   dipAngle: 0

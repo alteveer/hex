@@ -4,8 +4,10 @@
 //var newUV : Vector2[];
 //var newTriangles : int[];
 
+var threshold:float;
+
 var __angle: float;
-var size: int = 5;
+var size: float = 5;
 var height_map_z:int = 0;
 
 var x_i:float;
@@ -29,18 +31,10 @@ var uvs:Array;
 
 var sides:int = 6;
 
-var map_width = 40;
-var map_height = 40;
+var map_width = 100;
+var map_height = 100;
 
-var map:Array = new Array(
-	0, 0, 0, 0, 0, 1,
-	0, 1, 0, 1, 1, 0,
-	0, 1, 1, 1, 1, 1,
-	0, 0, 1, 0, 0, 1,
-	0, 1, 1, 1, 1, 0,
-	0, 0, 1, 1, 1, 0,
-	0, 0, 0, 0, 0, 0
-);
+var map:boolean[];
 
 var ISLAND_FACTOR:float = 1.07;  // 1.0 means no small islands; 2.0 leads to a lot
 var bumps:int;
@@ -54,17 +48,21 @@ function Start () {
 	dipAngle = Random.Range(0, 2*Mathf.PI);
 	dipWidth = Random.Range(0.2, 0.7);
 	
-	map = new Array(map_width * map_height);
+	map = new boolean[map_width * map_height];
 	for(var m:int = 0; m < map.length; m++) {
-		map[m] = inside(m % map_width, Mathf.FloorToInt(m / map_width)) == 0 ? 1: 0;
+		map[m] = inside(
+			(m % map_width) - map_width/2, 
+			Mathf.FloorToInt(m / map_width) - map_width/2
+		);
+		//map[m] = true;
 	}
 	
 
 }
 
-function inside(x:int, y:int) {
+function inside(x:int, y:int):boolean {
   var angle:float = Mathf.Atan2(y, x);
-  var length:float = 0.5 * (Mathf.Max(Mathf.Abs(x), Mathf.Abs(y)) + Mathf.Sqrt((x*x) + (y*y)));
+  var length:float = threshold * 0.01 *(Mathf.Max(Mathf.Abs(x), Mathf.Abs(y)) + Mathf.Sqrt((x*x) + (y*y)));
 
   var r1:float = 0.5 + 0.40 * Mathf.Sin(startAngle + bumps*angle + Mathf.Cos((bumps+3)*angle));
   var r2:float = 0.7 - 0.20 * Mathf.Sin(startAngle + bumps*angle - Mathf.Sin((bumps+2)*angle));
@@ -73,12 +71,22 @@ function inside(x:int, y:int) {
       || Mathf.Abs(angle - dipAngle - 2*Mathf.PI) < dipWidth) {
     r1 = r2 = 0.2;
   }
-  return  (length < r1 || (length > r1*ISLAND_FACTOR && length < r2));
+  return (length < r1 || (length > r1*ISLAND_FACTOR && length < r2));
 }
 
 
 
 function Update () {
+
+	//map = new boolean[map_width * map_height];
+	for(var n:int = 0; n < map.length; n++) {
+		map[n] = inside(
+			(n % map_width) - map_width/2, 
+			Mathf.FloorToInt(n / map_width) - map_width/2
+		);
+		//map[m] = true;
+	}
+
 	var mesh : Mesh = GetComponent(MeshFilter).mesh;
 	mesh.Clear();
 	// Do some calculations...
@@ -92,7 +100,7 @@ function Update () {
 	uvs = new Array();
 	
 	for(var m:int = 0; m < map.length; m++) {
-		if(map[m] == 1) {
+		if(map[m] == true) {
 			q = m % map_width;
 			r = Mathf.FloorToInt(m / map_width);
 			
@@ -138,6 +146,6 @@ function Update () {
 	mesh.normals = normals.ToBuiltin(Vector3) as Vector3[];
 	mesh.uv = uvs.ToBuiltin(Vector2) as Vector2[];
 	mesh.triangles = tris.ToBuiltin(int) as int[];
-	
+	//mesh.RecalculateBounds();
 }
 
