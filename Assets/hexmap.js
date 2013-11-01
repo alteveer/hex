@@ -94,9 +94,8 @@ function rebuild_mesh() {
 	var mesh : Mesh = GetComponent(MeshFilter).mesh;
 	mesh.Clear();
 	// Do some calculations...
-	x = 0;
-	y = 0;
-	z = 0;
+	var cube_coords:Vector3;
+	var center_position:Vector3;
 	idx = 0;
 	verts = new Array();
 	normals = new Array();
@@ -108,24 +107,26 @@ function rebuild_mesh() {
 			q = m % map_width;
 			r = Mathf.FloorToInt(m / map_width);
 			
-			x = -q * size * 1.5;
-			z = ((r * Mathf.Sqrt(3)) + ((q % 2) * Mathf.Sqrt(3)/2)) * size; //- ((q - ()) * ( * (size * 1.5))) ;
-			y = 0;// proper: -x - z;
+			cube_coords = libhex.axial2cube(Vector2(q, r));
 			
-			x += gameObject.transform.position.x;
-			y += gameObject.transform.position.y;
-			z += gameObject.transform.position.z;
+			center_position = Vector3();
+			center_position.x = cube_coords.x * size * 1.5;
+			center_position.y = 0;
+			center_position.z = cube_coords.z * Mathf.Sqrt(3) * size;
+			
+			center_position += gameObject.transform.position;
+			
 			
 			// center vert
-			verts.Push(Vector3(x, y, z));		
+			verts.Push(center_position);		
 			normals.Push(Vector3.up);
-			uvs.Push(Vector2(x * tiling_u, z * tiling_v));
+			uvs.Push(Vector2(cube_coords.x * tiling_u, cube_coords.z * tiling_v));
 			
 			for(var i:int = 0; i < sides; i++) {
 				__angle = ((2 * Mathf.PI) / 6) * i;
-				x_i = x + (size * Mathf.Cos(__angle));
-				y_i = y;
-				z_i = z + (size * Mathf.Sin(__angle));
+				x_i = center_position.x + (size * Mathf.Cos(__angle));
+				y_i = center_position.y;
+				z_i = center_position.z + (size * Mathf.Sin(__angle));
 				
 				verts.Push(Vector3(x_i, y_i, z_i));		
 				normals.Push(Vector3.up);
