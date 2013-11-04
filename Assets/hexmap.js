@@ -25,6 +25,7 @@ var r:float;
 var idx:int;
 
 var verts:Array;
+var colors:Array;
 var normals:Array;
 var tris:Array;
 var uvs:Array;
@@ -34,9 +35,9 @@ var sides:int = 6;
 var map_width = 90;
 var map_height = 60;
 
-var map:boolean[];
+var map:Tile[];
 
-var ISLAND_FACTOR:float = 1.07;  // 1.0 means no small islands; 2.0 leads to a lot
+var ISLAND_FACTOR:float = .60;  // 1.0 means no small islands; 2.0 leads to a lot
 var bumps:int;
 var startAngle:float;
 var dipAngle:float;
@@ -64,29 +65,49 @@ function generate_randoms() {
 	dipWidth = Random.Range(0.2, 0.7);
 }
 function regenerate_map() {
-	map = new boolean[map_width * map_height];
+	map = new Tile[map_width * map_height];
+	var contents;
 	for(var m:int = 0; m < map.length; m++) {
-		map[m] = inside(
-			(m % map_width) - map_width/2, 
-			Mathf.FloorToInt(m / map_width) - map_height/2
-		);
+		if(inside((m % map_width) - map_width/2, Mathf.FloorToInt(m / map_width) - map_height/2)) {
+			contents = Tile.Contents.Grass;
+		} else {
+			contents = Tile.Contents.Water;
+		}
+		map[m] = Tile(Vector3(), contents);
 		//map[m] = true;
 	}
-
+	rebuild_mesh();
 
 }
 
 function Start () {
-	generate_randoms();
+	if(bumps == 0 && startAngle == 0 && dipAngle == 0 && dipWidth == 0) {
+		generate_randoms();
+	}
 	regenerate_map();
+	
 }
 
-var update_mesh = true;
+var update_mesh = false;
 
 function Update () {
+	if(Input.GetKeyUp ("space")) {
+		generate_randoms();
+		regenerate_map();
+		return;
+	}
 	if(update_mesh) {
 		regenerate_map();
-		rebuild_mesh();
+	}
+	
+
+	var ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+	var hit : RaycastHit;
+	
+	if (Physics.Raycast (ray, hit, 1000)) {
+		Debug.DrawLine (Vector3(), hit.point);
+		debug_point = hit.point;
+		color_hex(hit.point);
 	}
 }
 
@@ -98,59 +119,81 @@ function rebuild_mesh() {
 	var center_position:Vector3;
 	idx = 0;
 	verts = new Array();
+	colors = new Array();
 	normals = new Array();
 	tris = new Array();
 	uvs = new Array();
 	
+	var current_tile:Tile;
+	
 	for(var m:int = 0; m < map.length; m++) {
-		if(map[m] == true) {
-			q = m % map_width;
-			r = Mathf.FloorToInt(m / map_width);
+		current_tile = map[m];
+		q = m % map_width;
+		r = Mathf.FloorToInt(m / map_width);
+		
+		cube_coords = libhex.evenq2cube(Vector2(q, r));
+		
+		center_position = Vector3();
+		center_position.x = cube_coords.x * size * 1.5;
+		center_position.y = 0;
+		center_position.z = cube_coords.z * Mathf.Sqrt(3) * size;
+		
+		current_tile.position = center_position;
+		
+		center_position += gameObject.transform.position;
+		
+		
+		// center vert
+		verts.Push(center_position);		
+		colors.Push(Tile.Colors[current_tile.contents]);
+		normals.Push(Vector3.up);
+		uvs.Push(Vector2(center_position.x * tiling_u, center_position.z * tiling_v));
+		
+		for(var i:int = 0; i < sides; i++) {
+			__angle = ((2 * Mathf.PI) / 6) * i;
+			x_i = center_position.x + (size * Mathf.Cos(__angle));
+			y_i = center_position.y;
+			z_i = center_position.z + (size * Mathf.Sin(__angle));
 			
-			cube_coords = libhex.axial2cube(Vector2(q, r));
-			
-			center_position = Vector3();
-			center_position.x = cube_coords.x * size * 1.5;
-			center_position.y = 0;
-			center_position.z = cube_coords.z * Mathf.Sqrt(3) * size;
-			
-			center_position += gameObject.transform.position;
-			
-			
-			// center vert
-			verts.Push(center_position);		
+			verts.Push(Vector3(x_i, y_i, z_i));		
+			colors.Push(Tile.Colors[current_tile.contents]);
 			normals.Push(Vector3.up);
-			uvs.Push(Vector2(cube_coords.x * tiling_u, cube_coords.z * tiling_v));
+			//uvs.Push(Vector2((x_i % 1) * (x_i/Mathf.Abs(x_i)), (z_i % 1) * (z_i/Mathf.Abs(z_i))));
+			uvs.Push(Vector2(x_i * tiling_u, z_i * tiling_v));
 			
-			for(var i:int = 0; i < sides; i++) {
-				__angle = ((2 * Mathf.PI) / 6) * i;
-				x_i = center_position.x + (size * Mathf.Cos(__angle));
-				y_i = center_position.y;
-				z_i = center_position.z + (size * Mathf.Sin(__angle));
-				
-				verts.Push(Vector3(x_i, y_i, z_i));		
-				normals.Push(Vector3.up);
-				//uvs.Push(Vector2((x_i % 1) * (x_i/Mathf.Abs(x_i)), (z_i % 1) * (z_i/Mathf.Abs(z_i))));
-				uvs.Push(Vector2(x_i * tiling_u, z_i * tiling_v));
-				
-				tris.Push(idx);
-				if(i + 1 == sides) {
-					tris.Push(idx + 1);	
-				} else {
-					tris.Push(idx + i + 2);
-				}
-				tris.Push(idx + i + 1);
-				
+			tris.Push(idx);
+			if(i + 1 == sides) {
+				tris.Push(idx + 1);	
+			} else {
+				tris.Push(idx + i + 2);
 			}
+			tris.Push(idx + i + 1);
 			
-			idx += 7;
 		}
+		
+		idx += 7;
+	
 	}
 
 	mesh.vertices = verts.ToBuiltin(Vector3) as Vector3[];
+	mesh.colors = colors.ToBuiltin(Color) as Color[];
 	mesh.normals = normals.ToBuiltin(Vector3) as Vector3[];
 	mesh.uv = uvs.ToBuiltin(Vector2) as Vector2[];
 	mesh.triangles = tris.ToBuiltin(int) as int[];
-	//mesh.RecalculateBounds();
+	var mesh_col:MeshCollider = GetComponent(MeshCollider);
+	mesh_col.sharedMesh = mesh;
+	// hack to get it to propogate immediately.
+	mesh_col.enabled = false;
+	mesh_col.enabled = true;
+	
 }
 
+var debug_point:Vector3 = Vector3();
+
+function color_hex(hex_to_find) {
+	
+}
+
+function OnGUI() {
+	GUI.Label(Rect(0, 0, 400, 30), 	debug_point.ToString("0.000"));
+}

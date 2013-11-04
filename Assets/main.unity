@@ -145,9 +145,9 @@ GameObject:
   m_Component:
   - 4: {fileID: 165915985}
   - 33: {fileID: 165915984}
-  - 65: {fileID: 165915983}
   - 23: {fileID: 165915982}
   - 114: {fileID: 165915986}
+  - 64: {fileID: 165915983}
   m_Layer: 0
   m_Name: Tilemap
   m_TagString: Untagged
@@ -173,8 +173,8 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
---- !u!65 &165915983
-BoxCollider:
+--- !u!64 &165915983
+MeshCollider:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -183,15 +183,16 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_SmoothSphereCollisions: 0
+  m_Convex: 0
+  m_Mesh: {fileID: 0}
 --- !u!33 &165915984
 MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 165915981}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 0}
 --- !u!4 &165915985
 Transform:
   m_ObjectHideFlags: 0
@@ -199,7 +200,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 165915981}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -13.8124695, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -214,7 +215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8f14b21650540941abae370d3e97cd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  threshold: 1.60000002
+  threshold: 1.79999995
   __angle: 0
   size: 1
   height_map_z: 0
@@ -232,13 +233,14 @@ MonoBehaviour:
   sides: 6
   map_width: 100
   map_height: 54
-  map: 
-  ISLAND_FACTOR: 1
+  map: []
+  ISLAND_FACTOR: .5
   bumps: 0
   startAngle: 0
   dipAngle: 0
   dipWidth: 0
-  update_mesh: 1
+  update_mesh: 0
+  debug_point: {x: 0, y: 0, z: 0}
 --- !u!1 &313928237
 GameObject:
   m_ObjectHideFlags: 0
@@ -314,7 +316,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 313928237}
   m_LocalRotation: {x: .589782596, y: 0, z: 0, w: .807562053}
-  m_LocalPosition: {x: -106.281654, y: 73.9980698, z: 13.375102}
+  m_LocalPosition: {x: -75, y: 73.9980698, z: 13.375102}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
