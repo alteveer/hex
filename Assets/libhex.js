@@ -3,6 +3,25 @@
 //static function cube2axial (x:float, y:float, z:float) {
 //	Debug.Log("libhex function");
 //}
+
+static function cube2world(cube_coords:Vector3, size:float):Vector3 {
+		return Vector3(
+			cube_coords.x * size * (3.0/2.0),
+			0,
+			cube_coords.z * Mathf.Sqrt(3) * size
+			);
+
+}
+
+static function world2cube(cube_coords:Vector3, size:float):Vector3 {
+		return Vector3(
+			cube_coords.x * (1/size) * (2.0/3.0),
+			cube_coords.y,
+			cube_coords.z * (1/Mathf.Sqrt(3)) * (1/size)
+			);
+
+}
+
 static function cube2evenq(cube_coords:Vector3):Vector2 {
 	return Vector2(
 		cube_coords.x, 
@@ -11,7 +30,7 @@ static function cube2evenq(cube_coords:Vector3):Vector2 {
 }
 
 static function evenq2cube(evenq_coords:Vector2):Vector3 {
-	var __x = -evenq_coords.x;
+	var __x = evenq_coords.x;
 	var __z = (evenq_coords.y + (((evenq_coords.x % 2)) / 2));
 	return Vector3(__x, -__x - __z, __z);
 }

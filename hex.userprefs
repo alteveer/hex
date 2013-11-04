@@ -1,19 +1,17 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\vertex_color.shader">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\hexmap.js">
     <Files>
-      <File FileName="Assets\hexmap.js" Line="159" Column="52" />
-      <File FileName="Assets\libhex.js" Line="1" Column="1" />
+      <File FileName="Assets\libhex.js" Line="35" Column="39" />
       <File FileName="Assets\Tile.js" Line="1" Column="1" />
-      <File FileName="Assets\vertex_color.shader" Line="21" Column="25" />
+      <File FileName="Assets\hexmap.js" Line="151" Column="48" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="C:\Users\coal\prj\hex\Assets\hexmap.js" line="42" />
+      <Breakpoint file="C:\Users\coal\prj\hex\Assets\hexmap.js" line="193" />
+      <Breakpoint file="C:\Users\coal\prj\hex\Assets\hexmap.js" line="194" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches>
-    <Watch file="Assets\hexmap.js" line="65" offsetX="380" offsetY="1024" expression="verts" liveUpdate="False" />
-  </MonoDevelop.Ide.DebuggingService.PinnedWatches>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

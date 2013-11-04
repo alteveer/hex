@@ -88,34 +88,10 @@ function Start () {
 	
 }
 
-var update_mesh = false;
-
-function Update () {
-	if(Input.GetKeyUp ("space")) {
-		generate_randoms();
-		regenerate_map();
-		return;
-	}
-	if(update_mesh) {
-		regenerate_map();
-	}
-	
-
-	var ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-	var hit : RaycastHit;
-	
-	if (Physics.Raycast (ray, hit, 1000)) {
-		Debug.DrawLine (Vector3(), hit.point);
-		debug_point = hit.point;
-		color_hex(hit.point);
-	}
-}
-
 function rebuild_mesh() {
 	var mesh : Mesh = GetComponent(MeshFilter).mesh;
 	mesh.Clear();
 	// Do some calculations...
-	var cube_coords:Vector3;
 	var center_position:Vector3;
 	idx = 0;
 	verts = new Array();
@@ -131,13 +107,9 @@ function rebuild_mesh() {
 		q = m % map_width;
 		r = Mathf.FloorToInt(m / map_width);
 		
-		cube_coords = libhex.evenq2cube(Vector2(q, r));
-		
-		center_position = Vector3();
-		center_position.x = cube_coords.x * size * 1.5;
+		center_position = libhex.cube2world(libhex.evenq2cube(Vector2(q, r)), size);
 		center_position.y = 0;
-		center_position.z = cube_coords.z * Mathf.Sqrt(3) * size;
-		
+						
 		current_tile.position = center_position;
 		
 		center_position += gameObject.transform.position;
@@ -188,12 +160,47 @@ function rebuild_mesh() {
 	
 }
 
-var debug_point:Vector3 = Vector3();
+var update_mesh = false;
 
-function color_hex(hex_to_find) {
+function Update () {
+	if(Input.GetKeyUp ("space")) {
+		generate_randoms();
+		regenerate_map();
+		return;
+	}
+	if(update_mesh) {
+		regenerate_map();
+	}
 	
+
+	var ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+	var hit : RaycastHit;
+	
+	if (Physics.Raycast (ray, hit, 1000)) {
+		Debug.DrawLine (Vector3(), hit.point);
+		debug_point = hit.point;
+		color_hex(libhex.cube2evenq(libhex.world2cube(hit.point, size)));
+	}
 }
+
+
+function color_hex(hex_to_color:Vector2) {
+	debug_point2.x = Mathf.FloorToInt(hex_to_color.x);
+	debug_point2.y = Mathf.FloorToInt(hex_to_color.y);
+	
+	var mesh : Mesh = GetComponent(MeshFilter).mesh;
+	var idx:int = debug_point2.x * debug_point2.y * 7;
+	
+	for(var i:int = 0; i < 7; i++) {
+		mesh.colors32[idx+i] = Color(1, 0, 0);
+		idx += 1;
+	}
+}
+
+var debug_point:Vector3 = Vector3();
+var debug_point2:Vector3 = Vector3();
 
 function OnGUI() {
 	GUI.Label(Rect(0, 0, 400, 30), 	debug_point.ToString("0.000"));
+	GUI.Label(Rect(0, 12, 400, 30), debug_point2.ToString("0.000"));
 }
