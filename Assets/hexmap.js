@@ -100,6 +100,7 @@ function rebuild_mesh() {
 	tris = new Array();
 	uvs = new Array();
 	
+	
 	var current_tile:Tile;
 	
 	for(var m:int = 0; m < map.length; m++) {
@@ -107,7 +108,7 @@ function rebuild_mesh() {
 		q = m % map_width;
 		r = Mathf.FloorToInt(m / map_width);
 		
-		center_position = libhex.cube2world(libhex.evenq2cube(Vector2(q, r)), size);
+		center_position = libhex.cube2world(libhex.axial2cube(Vector2(q, r)), size);
 		center_position.y = 0;
 						
 		current_tile.position = center_position;
@@ -179,7 +180,8 @@ function Update () {
 	if (Physics.Raycast (ray, hit, 1000)) {
 		Debug.DrawLine (Vector3(), hit.point);
 		debug_point = hit.point;
-		color_hex(libhex.cube2evenq(libhex.world2cube(hit.point, size)));
+		//debug_point2 = libhex.hex_round(libhex.world2cube(hit.point, size));
+		color_hex(libhex.cube2axial(libhex.world2cube(hit.point, size)));
 	}
 }
 
@@ -188,19 +190,25 @@ function color_hex(hex_to_color:Vector2) {
 	debug_point2.x = Mathf.FloorToInt(hex_to_color.x);
 	debug_point2.y = Mathf.FloorToInt(hex_to_color.y);
 	
+	
 	var mesh : Mesh = GetComponent(MeshFilter).mesh;
-	var idx:int = debug_point2.x * debug_point2.y * 7;
+	
+	
+	debug_color = mesh.colors[idx];
 	
 	for(var i:int = 0; i < 7; i++) {
-		mesh.colors32[idx+i] = Color(1, 0, 0);
-		idx += 1;
+	
+		mesh.colors[idx+i] = Color(1, 0, 0, 1);
+		//idx += 1;
 	}
 }
 
 var debug_point:Vector3 = Vector3();
 var debug_point2:Vector3 = Vector3();
+var debug_color:Color = Color();
 
 function OnGUI() {
-	GUI.Label(Rect(0, 0, 400, 30), 	debug_point.ToString("0.000"));
-	GUI.Label(Rect(0, 12, 400, 30), debug_point2.ToString("0.000"));
+	GUILayout.Label(debug_point.ToString("0.000"));
+	GUILayout.Label(debug_point2.ToString("0.000"));
+	GUILayout.Label(debug_color.ToString("0.0"));
 }

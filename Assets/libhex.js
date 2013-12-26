@@ -4,22 +4,57 @@
 //	Debug.Log("libhex function");
 //}
 
+//var tile_width = size * 2;
+//var tile_height = (Mathf.Sqrt(3)/2) * size * 2;
+
 static function cube2world(cube_coords:Vector3, size:float):Vector3 {
 		return Vector3(
-			cube_coords.x * size * (3.0/2.0),
+			cube_coords.x * (3.0/2.0),
 			0,
-			cube_coords.z * Mathf.Sqrt(3) * size
-			);
+			(cube_coords.z * Mathf.Sqrt(3)) + (cube_coords.x * (Mathf.Sqrt(3)/2))
+			) * size;
 
 }
 
 static function world2cube(cube_coords:Vector3, size:float):Vector3 {
 		return Vector3(
-			cube_coords.x * (1/size) * (2.0/3.0),
+			cube_coords.x * (2.0/3.0),
 			cube_coords.y,
-			cube_coords.z * (1/Mathf.Sqrt(3)) * (1/size)
-			);
+			(cube_coords.z * (1/Mathf.Sqrt(3))) - (Mathf.Sqrt(3)/2)
+			) / size;
 
+}
+
+static function hex_round(cube_coords:Vector3):Vector3 {
+    var rx = Mathf.RoundToInt(cube_coords.x);
+    var ry = Mathf.RoundToInt(cube_coords.y);
+    var rz = Mathf.RoundToInt(cube_coords.z);
+
+    var x_diff = Mathf.Abs(rx - cube_coords.x);
+    var y_diff = Mathf.Abs(ry - cube_coords.y);
+    var z_diff = Mathf.Abs(rz - cube_coords.z);
+
+    if (x_diff > y_diff && x_diff > z_diff) {
+        rx = -ry-rz;
+    } else if (y_diff > z_diff) {
+        ry = -rx-rz;
+    } else {
+        rz = -rx-ry;
+    }
+    
+    return Vector3(rx, ry, rz);
+}
+
+static function cube2axial(cube_coords:Vector3):Vector2 {
+	return Vector2(cube_coords.x, cube_coords.z);
+}
+
+static function axial2cube(axial_coords:Vector2):Vector3 {
+	return Vector3(
+		axial_coords.x, 
+		-axial_coords.x + -axial_coords.y,
+		axial_coords.y
+		);
 }
 
 static function cube2evenq(cube_coords:Vector3):Vector2 {

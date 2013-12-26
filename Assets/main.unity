@@ -4,13 +4,12 @@
 SceneSettings:
   m_ObjectHideFlags: 0
   m_PVSData: 
-  m_QueryMode: 1
   m_PVSObjectsArray: []
   m_PVSPortalsArray: []
   m_OcclusionBakeSettings:
-    viewCellSize: 1
-    bakeMode: 2
-    memoryUsage: 10485760
+    smallestOccluder: 5
+    smallestHole: .25
+    backfaceThreshold: 100
 --- !u!104 &2
 RenderSettings:
   m_Fog: 0
@@ -23,6 +22,7 @@ RenderSettings:
   m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: .5
   m_FlareStrength: 1
+  m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
   m_SpotCookie: {fileID: 0}
   m_ObjectHideFlags: 0
@@ -173,6 +173,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!64 &165915983
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -231,8 +234,8 @@ MonoBehaviour:
   r: 0
   idx: 0
   sides: 6
-  map_width: 100
-  map_height: 54
+  map_width: 5
+  map_height: 5
   map: []
   ISLAND_FACTOR: .5
   bumps: 0
@@ -242,6 +245,7 @@ MonoBehaviour:
   update_mesh: 0
   debug_point: {x: 0, y: 0, z: 0}
   debug_point2: {x: 0, y: 0, z: 0}
+  debug_color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &313928237
 GameObject:
   m_ObjectHideFlags: 0
@@ -310,6 +314,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!4 &313928242
 Transform:
   m_ObjectHideFlags: 0
@@ -317,7 +322,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 313928237}
   m_LocalRotation: {x: .589782596, y: 0, z: 0, w: .807562053}
-  m_LocalPosition: {x: 75, y: 73.9980698, z: 13.375102}
+  m_LocalPosition: {x: 69.6069565, y: 73.9980698, z: 13.375102}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
