@@ -1,11 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\hexmap.js">
     <Files>
-      <File FileName="Assets\hexmap.js" Line="1" Column="1" />
-      <File FileName="Assets\libhex.js" Line="1" Column="1" />
+      <File FileName="Assets\libhex.js" Line="21" Column="25" />
       <File FileName="Assets\Tile.js" Line="1" Column="1" />
-      <File FileName="Assets\hexmap.js" Line="1" Column="1" />
+      <File FileName="Assets\hexmap.js" Line="201" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

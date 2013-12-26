@@ -108,13 +108,12 @@ function rebuild_mesh() {
 		q = m % map_width;
 		r = Mathf.FloorToInt(m / map_width);
 		
-		center_position = libhex.cube2world(libhex.axial2cube(Vector2(q, r)), size);
+		center_position = libhex.cube2world(libhex.evenq2cube(Vector2(q, r)), size);
 		center_position.y = 0;
 						
 		current_tile.position = center_position;
 		
 		center_position += gameObject.transform.position;
-		
 		
 		// center vert
 		verts.Push(center_position);		
@@ -150,6 +149,7 @@ function rebuild_mesh() {
 
 	mesh.vertices = verts.ToBuiltin(Vector3) as Vector3[];
 	mesh.colors = colors.ToBuiltin(Color) as Color[];
+	original_colors = colors;
 	mesh.normals = normals.ToBuiltin(Vector3) as Vector3[];
 	mesh.uv = uvs.ToBuiltin(Vector2) as Vector2[];
 	mesh.triangles = tris.ToBuiltin(int) as int[];
@@ -180,29 +180,34 @@ function Update () {
 	if (Physics.Raycast (ray, hit, 1000)) {
 		Debug.DrawLine (Vector3(), hit.point);
 		debug_point = hit.point;
+		debug_point2.x = hit.triangleIndex;
+		debug_point2.y = Mathf.RoundToInt(hit.triangleIndex/6);//(hit.triangleIndex / 6) / map_height;
+		//debug_point2.z = (hit.triangleIndex / 6) % map_height;
 		//debug_point2 = libhex.hex_round(libhex.world2cube(hit.point, size));
-		color_hex(libhex.cube2axial(libhex.world2cube(hit.point, size)));
+		
+		color_hex(debug_point2.y*7);
+	} else {
+		rebuild_mesh();
 	}
 }
 
 
-function color_hex(hex_to_color:Vector2) {
-	debug_point2.x = Mathf.FloorToInt(hex_to_color.x);
-	debug_point2.y = Mathf.FloorToInt(hex_to_color.y);
-	
+function color_hex(idx:int) {	
 	
 	var mesh : Mesh = GetComponent(MeshFilter).mesh;
 	
+	//debug_color = mesh.colors[idx];
 	
-	debug_color = mesh.colors[idx];
-	
+	var colors:Color[] = original_colors.ToBuiltin(Color) as Color[];
 	for(var i:int = 0; i < 7; i++) {
-	
-		mesh.colors[idx+i] = Color(1, 0, 0, 1);
-		//idx += 1;
+		colors[idx+i] = Color(1, 0, 0, 1);
+		
 	}
+	mesh.colors = colors;
+	
+	
 }
-
+var original_colors:Array;
 var debug_point:Vector3 = Vector3();
 var debug_point2:Vector3 = Vector3();
 var debug_color:Color = Color();

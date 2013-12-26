@@ -11,7 +11,7 @@ static function cube2world(cube_coords:Vector3, size:float):Vector3 {
 		return Vector3(
 			cube_coords.x * (3.0/2.0),
 			0,
-			(cube_coords.z * Mathf.Sqrt(3)) + (cube_coords.x * (Mathf.Sqrt(3)/2))
+			(cube_coords.z * Mathf.Sqrt(3))
 			) * size;
 
 }
@@ -20,7 +20,7 @@ static function world2cube(cube_coords:Vector3, size:float):Vector3 {
 		return Vector3(
 			cube_coords.x * (2.0/3.0),
 			cube_coords.y,
-			(cube_coords.z * (1/Mathf.Sqrt(3))) - (Mathf.Sqrt(3)/2)
+			(cube_coords.z * (1/Mathf.Sqrt(3)))
 			) / size;
 
 }

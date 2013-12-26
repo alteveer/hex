@@ -234,8 +234,8 @@ MonoBehaviour:
   r: 0
   idx: 0
   sides: 6
-  map_width: 5
-  map_height: 5
+  map_width: 100
+  map_height: 54
   map: []
   ISLAND_FACTOR: .5
   bumps: 0
