@@ -25,6 +25,19 @@ static function world2cube(cube_coords:Vector3, size:float):Vector3 {
 
 }
 
+static function tile_width(size:float):float {
+	return size * 2;
+}
+static function tile_height(size:float):float {
+	return (Mathf.Sqrt(3)/2) * size * 2;
+}
+static function tile_horiz_spacing(size:float):float {
+	return size * 1.5;
+}
+static function tile_vert_spacing(size:float):float {
+	return (Mathf.Sqrt(3)/2) * size * 2;
+}
+
 static function hex_round(cube_coords:Vector3):Vector3 {
     var rx = Mathf.RoundToInt(cube_coords.x);
     var ry = Mathf.RoundToInt(cube_coords.y);

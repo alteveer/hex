@@ -162,6 +162,7 @@ function rebuild_mesh() {
 }
 
 var update_mesh = false;
+var hit : RaycastHit;
 
 function Update () {
 	if(Input.GetKeyUp ("space")) {
@@ -175,10 +176,9 @@ function Update () {
 	
 
 	var ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-	var hit : RaycastHit;
 	
 	if (Physics.Raycast (ray, hit, 1000)) {
-		Debug.DrawLine (Vector3(), hit.point);
+		//Debug.DrawLine (Vector3(), hit.point);
 		debug_point = hit.point;
 		//debug_point2.x = hit.triangleIndex;
 		//debug_point2.y = Mathf.RoundToInt(hit.triangleIndex/6);//(hit.triangleIndex / 6) / map_height;
@@ -204,7 +204,9 @@ function color_hexes(indexes:Vector2[]) {
 		var coords:Vector2 = indexes[index];
 		idx = (coords.x + (coords.y * map_width)) * 7;
 		for(var i:int = 0; i < 7; i++) {
-			colors[idx+i] = Color(1, 0, 0, 1);
+			if(idx + i > 0 && idx + i < colors.Length) {
+				colors[idx+i] = Color(1, 0, 0, 1);
+			}
 		}
 	}
 	mesh.colors = colors;

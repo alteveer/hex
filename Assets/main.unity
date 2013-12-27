@@ -258,6 +258,7 @@ GameObject:
   - 92: {fileID: 313928240}
   - 124: {fileID: 313928239}
   - 81: {fileID: 313928238}
+  - 114: {fileID: 313928243}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -321,8 +322,29 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 313928237}
-  m_LocalRotation: {x: .589782596, y: 0, z: 0, w: .807562053}
-  m_LocalPosition: {x: 69.6069565, y: 73.9980698, z: 13.375102}
+  m_LocalRotation: {x: .587785244, y: 0, z: 0, w: .809017003}
+  m_LocalPosition: {x: 0, y: 90.6044617, z: -29.9439926}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+--- !u!114 &313928243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 313928237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a02c3c0f7c9d172469d5112b134bff3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  map: {fileID: 0}
+  map_dimensions: {x: 0, y: 0}
+  map_center: {x: 0, y: 0}
+  target: {x: 0, y: 0, z: 0}
+  zoom_level_current: 0
+  zoom_levels: []
+  frustum_width: 0
+  frustum_height: 0
+  from: {x: 0, y: 0, z: 0}
+  start_lerp: 0
