@@ -70,7 +70,7 @@ static function evenq2cube(evenq_coords:Vector2):Vector3 {
 	return Vector3(__x, -__x - __z, __z);
 }
 
-static var _neighbors:Vector3[] = [
+static var _cube_neighbors:Vector3[] = [
    Vector3(1, -1, 0), 
    Vector3(1, 0, -1), 
    Vector3(0, 1, -1),
@@ -79,14 +79,46 @@ static var _neighbors:Vector3[] = [
    Vector3(0, -1, 1)
 ];
 
-static function neighbors(cube_coords:Vector3):Array {
+static var _evenq_neighbors = [
+	[
+		Vector2( 1,  0), 
+	   	Vector2( 1, -1), 
+	   	Vector2( 0, -1),
+	   	Vector2(-1, -1), 
+	   	Vector2(-1,  0), 
+	   	Vector2( 0,  1)
+	], [
+		Vector2( 1,  1), 
+	   	Vector2( 1,  0), 
+	   	Vector2( 0, -1),
+	   	Vector2(-1,  0), 
+	   	Vector2(-1,  1), 
+	   	Vector2( 0,  1)
+	]
+];
+
+
+static function neighbors_cube(cube_coords:Vector3):Array {
 	return [
-		_neighbors[0] + cube_coords,
-		_neighbors[1] + cube_coords,
-		_neighbors[2] + cube_coords,
-		_neighbors[3] + cube_coords,
-		_neighbors[4] + cube_coords,
-		_neighbors[5] + cube_coords
+		_cube_neighbors[0] + cube_coords,
+		_cube_neighbors[1] + cube_coords,
+		_cube_neighbors[2] + cube_coords,
+		_cube_neighbors[3] + cube_coords,
+		_cube_neighbors[4] + cube_coords,
+		_cube_neighbors[5] + cube_coords
 		];
 		
+}
+static function neighbors_evenq(evenq_coords:Vector2):Vector2[] {
+	
+	var mod:int = parseInt(evenq_coords.x) % 2;
+	
+	return [
+		_evenq_neighbors[mod][0] + evenq_coords,
+		_evenq_neighbors[mod][1] + evenq_coords,
+		_evenq_neighbors[mod][2] + evenq_coords,
+		_evenq_neighbors[mod][3] + evenq_coords,
+		_evenq_neighbors[mod][4] + evenq_coords,
+		_evenq_neighbors[mod][5] + evenq_coords
+		];
 }

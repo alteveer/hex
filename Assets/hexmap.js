@@ -180,31 +180,34 @@ function Update () {
 	if (Physics.Raycast (ray, hit, 1000)) {
 		Debug.DrawLine (Vector3(), hit.point);
 		debug_point = hit.point;
-		debug_point2.x = hit.triangleIndex;
-		debug_point2.y = Mathf.RoundToInt(hit.triangleIndex/6);//(hit.triangleIndex / 6) / map_height;
+		//debug_point2.x = hit.triangleIndex;
+		//debug_point2.y = Mathf.RoundToInt(hit.triangleIndex/6);//(hit.triangleIndex / 6) / map_height;
 		//debug_point2.z = (hit.triangleIndex / 6) % map_height;
 		//debug_point2 = libhex.hex_round(libhex.world2cube(hit.point, size));
 		
-		color_hex(debug_point2.y*7);
-	} else {
-		rebuild_mesh();
+		color_hexes(libhex.neighbors_evenq(
+			Vector2(
+				Mathf.RoundToInt(hit.triangleIndex / 6) % map_width, 
+				Mathf.RoundToInt(hit.triangleIndex / 6) / map_width)));
 	}
 }
 
 
-function color_hex(idx:int) {	
+function color_hexes(indexes:Vector2[]) {	
 	
 	var mesh : Mesh = GetComponent(MeshFilter).mesh;
 	
 	//debug_color = mesh.colors[idx];
 	
 	var colors:Color[] = original_colors.ToBuiltin(Color) as Color[];
-	for(var i:int = 0; i < 7; i++) {
-		colors[idx+i] = Color(1, 0, 0, 1);
-		
+	for(var index:int = 0;index < indexes.Length; index++) {
+		var coords:Vector2 = indexes[index];
+		idx = (coords.x + (coords.y * map_width)) * 7;
+		for(var i:int = 0; i < 7; i++) {
+			colors[idx+i] = Color(1, 0, 0, 1);
+		}
 	}
 	mesh.colors = colors;
-	
 	
 }
 var original_colors:Array;
