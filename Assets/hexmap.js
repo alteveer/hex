@@ -74,7 +74,7 @@ function find_distance_to_edge(tile_coords:Vector2):int {
 	var n:int;
 	Debug.Log(Mathf.Min(map_width, map_height));
 	
-	for(n = 0; n < 4; n++) {
+	for(n = 0; n < Mathf.Min(map_width, map_height); n++) {
 		results = [];
 		for(x = -n; x <= n; x++) {
 			for(y = Mathf.Max(-n, -x-n); y <= Mathf.Min(n, -x+n); y++) {
@@ -108,6 +108,12 @@ function regenerate_map() {
 		//map[m] = true;
 	}
 	
+	for(var t:Tile in map) {
+		if(t.contents != Tile.Contents.Water) {
+			t.distance_to_edge = find_distance_to_edge(t.coords);
+		}
+	}
+	
 	rebuild_mesh();
 
 }
@@ -132,7 +138,6 @@ function rebuild_mesh() {
 	tris = new Array();
 	uvs = new Array();
 	
-	
 	var current_tile:Tile;
 	
 	for(var m:int = 0; m < map.length; m++) {
@@ -141,7 +146,7 @@ function rebuild_mesh() {
 		r = Mathf.FloorToInt(m / map_width);
 		
 		center_position = libhex.cube2world(libhex.oddq2cube(Vector2(q, r)), size);
-		center_position.y = 0;
+		center_position.y = current_tile.distance_to_edge;
 						
 		//current_tile.position = center_position;
 		

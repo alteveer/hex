@@ -16,11 +16,11 @@ static function cube2world(cube_coords:Vector3, size:float):Vector3 {
 
 }
 
-static function world2cube(cube_coords:Vector3, size:float):Vector3 {
+static function world2cube(world_coords:Vector3, size:float):Vector3 {
 		return Vector3(
-			cube_coords.x * (2.0/3.0),
-			cube_coords.y,
-			(cube_coords.z * (1/Mathf.Sqrt(3))) - ((Mathf.Sqrt(3)/2) * (parseInt(cube_coords.x) & 1))
+			world_coords.x * (2.0/3.0),
+			world_coords.y,
+			(world_coords.z * (1/Mathf.Sqrt(3))) - ((Mathf.Sqrt(3)/2) * (parseInt(world_coords.x) & 1))
 			) / size;
 
 }
@@ -73,8 +73,8 @@ static function axial2cube(axial_coords:Vector2):Vector3 {
 static function cube2oddq(cube_coords:Vector3):Vector2 {
 	return Vector2(
 		cube_coords.x, 
-		cube_coords.z + (cube_coords.x - ((parseInt(cube_coords.x) & 1) / 2))
-		);	
+		cube_coords.z + (((parseInt(cube_coords.x) & 1)) / 2)
+		);
 }
 
 static function oddq2cube(oddq_coords:Vector2):Vector3 {
@@ -124,7 +124,7 @@ static function neighbors_cube(cube_coords:Vector3):Array {
 }
 static function neighbors_oddq(oddq_coords:Vector2):Vector2[] {
 	
-	var mod:int = parseInt(oddq_coords.x) % 2;
+	var mod:int = parseInt(oddq_coords.x) & 1;
 	
 	return [
 		_oddq_neighbors[mod][0] + oddq_coords,
