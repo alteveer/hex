@@ -64,6 +64,37 @@ function generate_randoms() {
 	dipAngle = Random.Range(0, 2*Mathf.PI);
 	dipWidth = Random.Range(0.2, 0.7);
 }
+
+function find_distance_to_edge(tile_coords:Vector2):int {
+	var cube_coords:Vector3 = libhex.oddq2cube(tile_coords);
+	var results:Array;
+	var x:int;
+	var y:int;
+	var z:int;
+	var n:int;
+	Debug.Log(Mathf.Min(map_width, map_height));
+	
+	for(n = 0; n < 4; n++) {
+		results = [];
+		for(x = -n; x <= n; x++) {
+			for(y = Mathf.Max(-n, -x-n); y <= Mathf.Min(n, -x+n); y++) {
+				z = -x-y;
+				results.push(cube_coords + Vector3(x, y, z));
+			}
+		}
+		var t:Vector2;
+		for(var r:int = 0; r < results.length; r++) {
+			t = libhex.cube2oddq(results[r]);
+			if(t.x + (t.y * map_width) < map.length) {
+				if(map[t.x + (t.y * map_width)].contents == Tile.Contents.Water) {
+					return n;
+				}
+			}
+		}
+	}
+	return 0;
+}
+
 function regenerate_map() {
 	map = new Tile[map_width * map_height];
 	var contents;
@@ -73,9 +104,10 @@ function regenerate_map() {
 		} else {
 			contents = Tile.Contents.Water;
 		}
-		map[m] = Tile(Vector3(), contents);
+		map[m] = Tile(Vector2(m % map_width, m / map_width), contents);
 		//map[m] = true;
 	}
+	
 	rebuild_mesh();
 
 }
@@ -108,10 +140,10 @@ function rebuild_mesh() {
 		q = m % map_width;
 		r = Mathf.FloorToInt(m / map_width);
 		
-		center_position = libhex.cube2world(libhex.evenq2cube(Vector2(q, r)), size);
+		center_position = libhex.cube2world(libhex.oddq2cube(Vector2(q, r)), size);
 		center_position.y = 0;
 						
-		current_tile.position = center_position;
+		//current_tile.position = center_position;
 		
 		center_position += gameObject.transform.position;
 		
@@ -163,6 +195,7 @@ function rebuild_mesh() {
 
 var update_mesh = false;
 var hit : RaycastHit;
+var tile_coords:Vector2;
 
 function Update () {
 	if(Input.GetKeyUp ("space")) {
@@ -173,7 +206,6 @@ function Update () {
 	if(update_mesh) {
 		regenerate_map();
 	}
-	
 
 	var ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 	
@@ -184,11 +216,13 @@ function Update () {
 		//debug_point2.y = Mathf.RoundToInt(hit.triangleIndex/6);//(hit.triangleIndex / 6) / map_height;
 		//debug_point2.z = (hit.triangleIndex / 6) % map_height;
 		//debug_point2 = libhex.hex_round(libhex.world2cube(hit.point, size));
-		
-		color_hexes(libhex.neighbors_evenq(
-			Vector2(
+		tile_coords = Vector2(
 				Mathf.RoundToInt(hit.triangleIndex / 6) % map_width, 
-				Mathf.RoundToInt(hit.triangleIndex / 6) / map_width)));
+				Mathf.RoundToInt(hit.triangleIndex / 6) / map_width);
+		color_hexes(libhex.neighbors_oddq(tile_coords));
+		debug_point2.x = tile_coords.x;
+		debug_point2.y = tile_coords.y;
+		debug_point2.z = find_distance_to_edge(tile_coords);
 	}
 }
 

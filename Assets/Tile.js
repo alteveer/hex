@@ -10,12 +10,13 @@ class Tile {
 		Contents.Grass: Color(0, 1, 0)
 	};
 	
-	var position:Vector3;
+	var coords:Vector2;
 	var contents:Contents;
+	var distance_to_edge:int;
 	
-	function Tile(_p:Vector3, _c:Contents) {
-		this.position = _p;
-		this.contents = _c;
+	function Tile(_coords:Vector3, _contents:Contents) {
+		this.coords = _coords;
+		this.contents = _contents;
 		
 	}
 }
