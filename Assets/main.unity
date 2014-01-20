@@ -105,7 +105,7 @@ Light:
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 1
     m_Resolution: -1
     m_Strength: 1
     m_Bias: .0500000007
@@ -131,8 +131,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 108202458}
-  m_LocalRotation: {x: .948189795, y: .111452058, z: .0468748435, w: .293798149}
-  m_LocalPosition: {x: .455183208, y: 10.2466555, z: 7.94530296}
+  m_LocalRotation: {x: .805157959, y: .175558463, z: .191755712, w: .533038139}
+  m_LocalPosition: {x: .455183208, y: 56.1228828, z: 87.5272141}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -233,7 +233,6 @@ MonoBehaviour:
   q: 0
   r: 0
   idx: 0
-  sides: 6
   map_width: 100
   map_height: 54
   map: []
@@ -243,6 +242,7 @@ MonoBehaviour:
   dipAngle: 0
   dipWidth: 0
   update_mesh: 0
+  tile_coords: {x: 0, y: 0}
   debug_point: {x: 0, y: 0, z: 0}
   debug_point2: {x: 0, y: 0, z: 0}
   debug_color: {r: 0, g: 0, b: 0, a: 0}

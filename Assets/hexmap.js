@@ -24,13 +24,11 @@ var q:float;
 var r:float;
 var idx:int;
 
-var verts:Array;
-var colors:Array;
-var normals:Array;
-var tris:Array;
-var uvs:Array;
-
-var sides:int = 6;
+var verts:ArrayList;
+var colors:ArrayList;
+var normals:ArrayList;
+var tris:ArrayList;
+var uvs:ArrayList;
 
 var map_width = 90;
 var map_height = 60;
@@ -72,7 +70,7 @@ function find_distance_to_edge(tile_coords:Vector2):int {
 	var y:int;
 	var z:int;
 	var n:int;
-	Debug.Log(Mathf.Min(map_width, map_height));
+	//Debug.Log(Mathf.Min(map_width, map_height));
 	
 	for(n = 0; n < Mathf.Min(map_width, map_height); n++) {
 		results = [];
@@ -126,24 +124,31 @@ function Start () {
 	
 }
 
+
+
 function rebuild_mesh() {
 	var mesh : Mesh = GetComponent(MeshFilter).mesh;
 	mesh.Clear();
 	// Do some calculations...
 	var center_position:Vector3;
 	idx = 0;
-	verts = new Array();
-	colors = new Array();
-	normals = new Array();
-	tris = new Array();
-	uvs = new Array();
+	verts = new ArrayList();
+	colors = new ArrayList();
+	normals = new ArrayList();
+	tris = new ArrayList();
+	uvs = new ArrayList();
 	
 	var current_tile:Tile;
-	
+	var index_additions = [0, 2, 1, 0, 3, 2, 0, 4, 3, 0, 5, 4, 0, 6, 5, 0, 1, 6];
+		
 	for(var m:int = 0; m < map.length; m++) {
 		current_tile = map[m];
 		q = m % map_width;
 		r = Mathf.FloorToInt(m / map_width);
+		
+		if(current_tile.contents == Tile.Contents.Water) {
+			//continue;
+		}
 		
 		center_position = libhex.cube2world(libhex.oddq2cube(Vector2(q, r)), size);
 		center_position.y = current_tile.distance_to_edge;
@@ -153,43 +158,49 @@ function rebuild_mesh() {
 		center_position += gameObject.transform.position;
 		
 		// center vert
-		verts.Push(center_position);		
-		colors.Push(Tile.Colors[current_tile.contents]);
-		normals.Push(Vector3.up);
-		uvs.Push(Vector2(center_position.x * tiling_u, center_position.z * tiling_v));
+		verts.Add(center_position);		
+		colors.Add(Tile.Colors[current_tile.contents]);
+		normals.Add(Vector3.up);
+		uvs.Add(Vector2(center_position.x * tiling_u, center_position.z * tiling_v));
 		
-		for(var i:int = 0; i < sides; i++) {
+		for(var i:int = 0; i < 6; i++) {
 			__angle = ((2 * Mathf.PI) / 6) * i;
 			x_i = center_position.x + (size * Mathf.Cos(__angle));
 			y_i = center_position.y;
 			z_i = center_position.z + (size * Mathf.Sin(__angle));
 			
-			verts.Push(Vector3(x_i, y_i, z_i));		
-			colors.Push(Tile.Colors[current_tile.contents]);
-			normals.Push(Vector3.up);
-			//uvs.Push(Vector2((x_i % 1) * (x_i/Mathf.Abs(x_i)), (z_i % 1) * (z_i/Mathf.Abs(z_i))));
-			uvs.Push(Vector2(x_i * tiling_u, z_i * tiling_v));
+			verts.Add(Vector3(x_i, y_i, z_i));		
+			colors.Add(Tile.Colors[current_tile.contents]);
+			normals.Add(Vector3.up);
+			//uvs.Add(Vector2((x_i % 1) * (x_i/Mathf.Abs(x_i)), (z_i % 1) * (z_i/Mathf.Abs(z_i))));
+			uvs.Add(Vector2(x_i * tiling_u, z_i * tiling_v));
 			
-			tris.Push(idx);
-			if(i + 1 == sides) {
-				tris.Push(idx + 1);	
-			} else {
-				tris.Push(idx + i + 2);
-			}
-			tris.Push(idx + i + 1);
+//			tris.Add(idx);
+//			//current_tile.index_list
+//			if(i + 1 == 6) {
+//				tris.Add(idx + 1);	
+//			} else {
+//				tris.Add(idx + i + 2);
+//			}
+//			tris.Add(idx + i + 1);
 			
 		}
 		
+		for(var j:int = 0; j < index_additions.Length; j++) {
+			tris.Add(idx + index_additions[j]);
+		}
+		
+		
 		idx += 7;
-	
+		
 	}
 
-	mesh.vertices = verts.ToBuiltin(Vector3) as Vector3[];
-	mesh.colors = colors.ToBuiltin(Color) as Color[];
+	mesh.vertices = verts.ToArray(Vector3) as Vector3[];
+	mesh.colors = colors.ToArray(Color) as Color[];
 	original_colors = colors;
-	mesh.normals = normals.ToBuiltin(Vector3) as Vector3[];
-	mesh.uv = uvs.ToBuiltin(Vector2) as Vector2[];
-	mesh.triangles = tris.ToBuiltin(int) as int[];
+	mesh.normals = normals.ToArray(Vector3) as Vector3[];
+	mesh.uv = uvs.ToArray(Vector2) as Vector2[];
+	mesh.triangles = tris.ToArray(int) as int[];
 	var mesh_col:MeshCollider = GetComponent(MeshCollider);
 	mesh_col.sharedMesh = mesh;
 	// hack to get it to propogate immediately.
@@ -238,7 +249,7 @@ function color_hexes(indexes:Vector2[]) {
 	
 	//debug_color = mesh.colors[idx];
 	
-	var colors:Color[] = original_colors.ToBuiltin(Color) as Color[];
+	var colors:Color[] = original_colors.ToArray(Color) as Color[];
 	for(var index:int = 0;index < indexes.Length; index++) {
 		var coords:Vector2 = indexes[index];
 		idx = (coords.x + (coords.y * map_width)) * 7;
@@ -251,7 +262,7 @@ function color_hexes(indexes:Vector2[]) {
 	mesh.colors = colors;
 	
 }
-var original_colors:Array;
+var original_colors:ArrayList;
 var debug_point:Vector3 = Vector3();
 var debug_point2:Vector3 = Vector3();
 var debug_color:Color = Color();

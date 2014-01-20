@@ -55,7 +55,7 @@ function Update () {
 	frustum_height = 2.0 * offset().magnitude * Mathf.Tan(camera.fieldOfView * 0.5 * Mathf.Deg2Rad);
 	frustum_width = frustum_height * camera.aspect;
 
-	Debug.Log(frustum_width + " : " + frustum_height);
+	//Debug.Log(frustum_width + " : " + frustum_height);
 }
 
 function offset():Vector3 {
