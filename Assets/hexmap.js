@@ -166,7 +166,7 @@ function rebuild_mesh() {
 		r = Mathf.FloorToInt(m / map_width);
 		
 		if(current_tile.contents == Tile.Contents.Water) {
-			//continue;
+			continue;
 		}
 		
 		center_position = libhex.cube2world(libhex.oddq2cube(Vector2(q, r)), size);
@@ -255,8 +255,19 @@ function Update () {
 		tile_coords = Vector2(
 				Mathf.RoundToInt(hit.triangleIndex / 6) % map_width, 
 				Mathf.RoundToInt(hit.triangleIndex / 6) / map_width);
-		highlight_tiles([hit.triangleIndex]);
-		//color_hexes(libhex.neighbors_oddq(tile_coords));
+
+		//map[index_lookup[hit.triangleIndex * 3]].coords;
+
+		
+		var neighbor_coords:Vector2[] = libhex.neighbors_oddq(
+			map[index_lookup[hit.triangleIndex * 3]].coords
+		);
+		var to_highlight:ArrayList = new ArrayList();
+		for(var n:Vector2 in neighbor_coords) {
+			to_highlight.Add(map[n.x + (n.y * map_width)]);
+		}
+		highlight_tiles(to_highlight.ToArray(Tile) as Tile[]);
+		//color_hexes();
 		
 		debug_point2.x = tile_coords.x;
 		debug_point2.y = tile_coords.y;
@@ -265,18 +276,23 @@ function Update () {
 }
 
 
-function highlight_tiles(tiles:int[]) {
+function highlight_tiles(tiles:Tile[]) {
 	highlight_mesh.Clear();
 	
 	__verts = new ArrayList();
 	__normals = new ArrayList();
 	__tris = new ArrayList();
+	__uvs = new ArrayList();
 	
 	var idx:int = 0;
 	
-	for(var tile:int in tiles) {
-		var current_tile:Tile = map[index_lookup[tile*3]];
-		var center_position = current_tile.world_coords;
+	for(var tile:Tile in tiles) {
+		if(tile.world_coords == Vector3()) {
+			continue;
+		}
+		
+		var center_position = tile.world_coords;
+		
 		
 		__verts.Add(center_position);
 		__normals.Add(Vector3.up);
@@ -304,7 +320,7 @@ function highlight_tiles(tiles:int[]) {
 	highlight_mesh.vertices = __verts.ToArray(Vector3) as Vector3[];	
 	highlight_mesh.triangles = __tris.ToArray(int) as int[];
 	highlight_mesh.normals = __normals.ToArray(Vector3) as Vector3[];
-	//highlight_mesh.uv = __uvs.ToArray(Vector2) as Vector2[];
+	highlight_mesh.uv = __uvs.ToArray(Vector2) as Vector2[];
 	
 }
 
