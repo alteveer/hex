@@ -11,13 +11,16 @@ class Tile {
 	};
 	
 	var coords:Vector2;
+	var world_coords:Vector3;
 	var contents:Contents;
 	var distance_to_edge:int;
+	var tris:ArrayList;
 	
 	function Tile(_coords:Vector3, _contents:Contents) {
 		this.coords = _coords;
 		this.contents = _contents;
-		
+		this.tris = new ArrayList();
+		this.world_coords = new Vector3();
 	}
 }
 

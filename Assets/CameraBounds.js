@@ -10,7 +10,7 @@ var zoom_levels:Vector3[];
 
 function Start () {
 
-	map = GameObject.Find("Tilemap").GetComponent(hexmap);
+	map = GameObject.Find("/tilemap").GetComponent(hexmap);
 	Debug.Log("Map size: " + map.size);
 	map_dimensions.x = map.map_width * map.size * libhex.tile_horiz_spacing(map.size);
 	map_dimensions.y = map.map_height * map.size * libhex.tile_vert_spacing(map.size);
