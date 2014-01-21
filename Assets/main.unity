@@ -100,7 +100,7 @@ Light:
   serializedVersion: 3
   m_Type: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: .5
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
@@ -221,18 +221,17 @@ MonoBehaviour:
   threshold: 1.79999995
   __angle: 0
   size: 1
-  height_map_z: 0
+  height_per_level: .5
   x_i: 0
   y_i: 0
   z_i: 0
-  tiling_u: 1
-  tiling_v: 1
+  tiling_u: .200000003
+  tiling_v: .200000003
   x: 0
   y: 0
   z: 0
   q: 0
   r: 0
-  idx: 0
   map_width: 100
   map_height: 54
   map: []
@@ -241,8 +240,16 @@ MonoBehaviour:
   startAngle: 0
   dipAngle: 0
   dipWidth: 0
+  tilemap_mesh: {fileID: 0}
+  tilemap_mesh_col: {fileID: 0}
+  highlight_mesh: {fileID: 0}
+  index_additions: 
   update_mesh: 0
-  tile_coords: {x: 0, y: 0}
+  _tile:
+    coords: {x: 0, y: 0}
+    world_coords: {x: 0, y: 0, z: 0}
+    contents: 0
+    distance_to_edge: 0
   debug_point: {x: 0, y: 0, z: 0}
   debug_point2: {x: 0, y: 0, z: 0}
   debug_color: {r: 0, g: 0, b: 0, a: 0}

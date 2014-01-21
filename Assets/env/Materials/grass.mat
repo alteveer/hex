@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: map
+  m_Name: grass
   m_Shader: {fileID: 4800000, guid: f4c082ee84260984bbc996b0a339ec51, type: 3}
   m_ShaderKeywords: []
   m_CustomRenderQueue: -1
@@ -20,16 +20,5 @@ Material:
           m_Texture: {fileID: 2800000, guid: 8f61a558b9b92b749804ab555abc5d8e, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _BumpMap
-        second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
     m_Floats: {}
-    m_Colors:
-      data:
-        first:
-          name: _Color
-        second: {r: 1, g: 1, b: 1, a: 1}
+    m_Colors: {}

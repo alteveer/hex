@@ -139,9 +139,6 @@ function Start () {
 	
 }
 
-
-
-
 function rebuild_mesh() {
 	
 	tilemap_mesh.Clear();
@@ -231,7 +228,7 @@ function rebuild_mesh() {
 
 var update_mesh = false;
 var hit : RaycastHit;
-var tile_coords:Vector2;
+var _tile:Tile;
 
 function Update () {
 	if(Input.GetKeyUp ("space")) {
@@ -252,26 +249,36 @@ function Update () {
 		//debug_point2.y = Mathf.RoundToInt(hit.triangleIndex/6);//(hit.triangleIndex / 6) / map_height;
 		//debug_point2.z = (hit.triangleIndex / 6) % map_height;
 		//debug_point2 = libhex.hex_round(libhex.world2cube(hit.point, size));
-		tile_coords = Vector2(
-				Mathf.RoundToInt(hit.triangleIndex / 6) % map_width, 
-				Mathf.RoundToInt(hit.triangleIndex / 6) / map_width);
+		//tile_coords = Vector2(
+		//		Mathf.RoundToInt(hit.triangleIndex / 6) % map_width, 
+		//		Mathf.RoundToInt(hit.triangleIndex / 6) / map_width);
 
 		//map[index_lookup[hit.triangleIndex * 3]].coords;
+		_tile = map[index_lookup[hit.triangleIndex * 3]];
+		
+//		var neighbor_coords:Vector2[] = libhex.neighbors_oddq(
+//			_tile.coords
+//		);
+		var to_highlight:ArrayList = new ArrayList();
 
 		
-		var neighbor_coords:Vector2[] = libhex.neighbors_oddq(
-			map[index_lookup[hit.triangleIndex * 3]].coords
-		);
-		var to_highlight:ArrayList = new ArrayList();
-		for(var n:Vector2 in neighbor_coords) {
-			to_highlight.Add(map[n.x + (n.y * map_width)]);
+		for(x = -n; x <= n; x++) {
+			for(y = Mathf.Max(-n, -x-n); y <= Mathf.Min(n, -x+n); y++) {
+				z = -x-y;
+				to_highlight.Add(cube_coords + Vector3(x, y, z));
+			}
 		}
+
+//		for(var n:Vector2 in neighbor_coords) {
+//			to_highlight.Add(map[n.x + (n.y * map_width)]);
+//		}
 		highlight_tiles(to_highlight.ToArray(Tile) as Tile[]);
 		//color_hexes();
 		
-		debug_point2.x = tile_coords.x;
-		debug_point2.y = tile_coords.y;
-		debug_point2.z = find_distance_to_edge(tile_coords);
+		
+		debug_point2.x = _tile.coords.x;
+		debug_point2.y = _tile.coords.y;
+		debug_point2.z = find_distance_to_edge(_tile.coords);
 	}
 }
 
