@@ -57,12 +57,7 @@ function inside(x:int, y:int):boolean {
 }
 
 
-function generate_randoms() {
-	bumps = Random.Range(1, 6);
-	startAngle = Random.Range(0, 2*Mathf.PI);
-	dipAngle = Random.Range(0, 2*Mathf.PI);
-	dipWidth = Random.Range(0.2, 0.7);
-}
+
 
 function find_distance_to_edge(tile_coords:Vector2):int {
 	var cube_coords:Vector3 = libhex.oddq2cube(tile_coords);
@@ -96,28 +91,7 @@ function find_distance_to_edge(tile_coords:Vector2):int {
 	return 0;
 }
 
-function regenerate_map() {
-	map = new Tile[map_width * map_height];
-	var contents;
-	for(var m:int = 0; m < map.length; m++) {
-		if(inside((m % map_width) - map_width/2, Mathf.FloorToInt(m / map_width) - map_height/2)) {
-			contents = Tile.Contents.Grass;
-		} else {
-			contents = Tile.Contents.Water;
-		}
-		map[m] = Tile(Vector2(m % map_width, m / map_width), contents);
-		//map[m] = true;
-	}
-	
-	for(var t:Tile in map) {
-		if(t.contents != Tile.Contents.Water) {
-			t.distance_to_edge = find_distance_to_edge(t.coords);
-		}
-	}
-	
-	rebuild_mesh();
 
-}
 
 var tilemap_mesh:Mesh;
 var tilemap_mesh_col:MeshCollider;
@@ -126,11 +100,7 @@ var highlight_mesh:Mesh;
 var index_additions:int[];
 
 function Start () {
-	tilemap_mesh = GameObject.Find("/tilemap").GetComponent(MeshFilter).mesh;
-	tilemap_mesh_col = GameObject.Find("/tilemap").GetComponent(MeshCollider);
-	highlight_mesh = GameObject.Find("/tilemap_highlights").GetComponent(MeshFilter).mesh;
-	
-	index_additions = [0, 2, 1, 0, 3, 2, 0, 4, 3, 0, 5, 4, 0, 6, 5, 0, 1, 6];
+
 	
 	if(bumps == 0 && startAngle == 0 && dipAngle == 0 && dipWidth == 0) {
 		generate_randoms();
@@ -260,8 +230,8 @@ function Update () {
 //			_tile.coords
 //		);
 		var to_highlight:ArrayList = new ArrayList();
-
-		
+		var cube_coords:Vector3 = libhex.oddq2cube(_tile.coords);
+		var n = 2;
 		for(x = -n; x <= n; x++) {
 			for(y = Mathf.Max(-n, -x-n); y <= Mathf.Min(n, -x+n); y++) {
 				z = -x-y;

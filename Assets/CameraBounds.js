@@ -1,6 +1,8 @@
 ﻿#pragma strict
 
-var map:hexmap;
+var map_object:GameObject;
+var map:TileMap;
+
 var map_dimensions:Vector2;
 var map_center:Vector2;
 var target:Vector3;
@@ -9,11 +11,10 @@ var zoom_level_current:int = 0;
 var zoom_levels:Vector3[];
 
 function Start () {
-
-	map = GameObject.Find("/tilemap").GetComponent(hexmap);
-	Debug.Log("Map size: " + map.size);
-	map_dimensions.x = map.map_width * map.size * libhex.tile_horiz_spacing(map.size);
-	map_dimensions.y = map.map_height * map.size * libhex.tile_vert_spacing(map.size);
+	map = map_object.GetComponent(TileMap);
+	
+	map_dimensions.x = map.width * map.tile_radius * libhex.tile_horiz_spacing(map.tile_radius);
+	map_dimensions.y = map.height * map.tile_radius * libhex.tile_vert_spacing(map.tile_radius);
 	map_center = Vector2(
 		Mathf.RoundToInt(map_dimensions.x / 2),
 		Mathf.RoundToInt(map_dimensions.y / 2));
@@ -44,11 +45,11 @@ function Update () {
 		if(zoom_level_current < 0) { zoom_level_current = 0; }
 	}
 	
-	if(Input.GetMouseButtonUp(0) && map.hit.point != null) {
-		target = map.hit.point;
-		from = this.transform.position - offset();
-		start_lerp = Time.time;
-	}
+//	if(Input.GetMouseButtonUp(0) && map.hit.point != null) {
+//		target = map.hit.point;
+//		from = this.transform.position - offset();
+//		start_lerp = Time.time;
+//	}
 	
 	this.transform.position = Vector3.Lerp(from, target, Time.time - start_lerp) + offset();
 	
