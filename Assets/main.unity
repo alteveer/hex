@@ -255,10 +255,18 @@ MonoBehaviour:
     q: 0
     r: 0
     __index_additions: 
+    mesh_obj: {fileID: 0}
     mesh: {fileID: 0}
     mesh_col: {fileID: 0}
     highlight: {fileID: 0}
     highlight_mesh: {fileID: 0}
+    cartog:
+      threshold: 1.79999995
+      ISLAND_FACTOR: .5
+      bumps: 2
+      startAngle: 2.83783937
+      dipAngle: 3.20645332
+      dipWidth: .43112722
     x_i: 0
     y_i: 0
     z_i: 0

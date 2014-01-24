@@ -24,25 +24,41 @@ class TileMap {
 	var index_lookup:ArrayList;
 	var __index_additions = [0, 2, 1, 0, 3, 2, 0, 4, 3, 0, 5, 4, 0, 6, 5, 0, 1, 6];
 
+	var mesh_obj:GameObject;
 	var mesh:Mesh;
 	var mesh_col:MeshCollider;	
 	var highlight:GameObject;
 	var highlight_mesh:Mesh;
 	
+	var cartog:Cartographer;
+	
 	function TileMap(width:int, height:int) {
 		this._width = width;
 		this._height = height;		
+		
+	
+		this.mesh_obj = new GameObject();
+		this.mesh_obj.AddComponent(MeshRenderer);
+		this.mesh_obj.renderer.material = new Material(Shader.Find(" Diffuse"));
+		this.mesh_obj.renderer.material.color = Color(0, .8, 0, 1);
+		
+		this.mesh = new Mesh();
+		this.mesh_obj.AddComponent(MeshFilter).mesh = this.mesh;
+		
+		this.mesh_col = this.mesh_obj.AddComponent(MeshCollider);
 		
 		this.highlight = new GameObject();
 		this.highlight.AddComponent(MeshRenderer);
 		this.highlight.renderer.material = new Material(Shader.Find(" Diffuse"));
 		this.highlight.renderer.material.color = Color(1, 0, 0, 0.5);
 		
-		var highlight_mf = this.highlight.AddComponent(MeshFilter);
 		this.highlight_mesh = new Mesh();
-		highlight_mf.mesh = this.highlight_mesh;
+		this.highlight.AddComponent(MeshFilter).mesh = this.highlight_mesh;
 		
-		rebuild_mesh()
+		cartog = new Cartographer();
+		cartog.generate_randoms();
+		regenerate_map();
+		rebuild_mesh();
 	}
 	
 	function get width() : int { return _width; }
@@ -61,7 +77,7 @@ class TileMap {
 	var __uvs:ArrayList;											
 
 	function index2coords(index:int):Vector2 {
-		return Vector2(index % this._width, Mathf.FloorToInt(index / this._width))
+		return Vector2(index % this._width, Mathf.FloorToInt(index / this._width));
 	}
 
 	function coords2index(coords:Vector2):int {
@@ -69,29 +85,26 @@ class TileMap {
 	}
 
 	function regenerate_map() {
-		cart = new Cartographer();
-		map = new Tile[map_width * map_height];
+		_tile_list = new Tile[_width * _height];
 		var contents;
 		var coords:Vector2;
-		for(var m:int = 0; m < map.length; m++) {
+		for(var m:int = 0; m < _tile_list.length; m++) {
 			coords = index2coords(m);
-			if(inside( - map_width/2, Mathf.FloorToInt(m / map_width) - map_height/2)) {
+			if(cartog.test_radial( - _width/2, Mathf.FloorToInt(m / _width) - _height/2)) {
 				contents = Tile.Contents.Grass;
 			} else {
 				contents = Tile.Contents.Water;
 			}
-			map[m] = Tile(Vector2(m % map_width, m / map_width), contents);
+			_tile_list[m] = Tile(Vector2(m % _width, m / _width), contents);
 			//map[m] = true;
 		}
 		
-		for(var t:Tile in map) {
-			if(t.contents != Tile.Contents.Water) {
-				t.distance_to_edge = find_distance_to_edge(t.coords);
-			}
-		}
+//		for(var t:Tile in map) {
+//			if(t.contents != Tile.Contents.Water) {
+//				t.distance_to_edge = find_distance_to_edge(t.coords);
+//			}
+//		}
 		
-		rebuild_mesh();
-
 	}
 			
 	function rebuild_mesh() {
@@ -113,13 +126,13 @@ class TileMap {
 		var __idx:int = 0;
 		var __angle: float;
 		
-		for(var m:int = 0; m < map.length; m++) {
+		for(var m:int = 0; m < _tile_list.length; m++) {
 			current_tile = _tile_list[m];
 			q = m % _width;
 			r = Mathf.FloorToInt(m / _width);
 			
 			if(current_tile.contents == Tile.Contents.Water) {
-				continue;
+				//continue;
 			}
 			
 			center_position = libhex.cube2world(libhex.oddq2cube(Vector2(q, r)), _tile_radius);
@@ -168,7 +181,7 @@ class TileMap {
 			
 		}
 
-		__idx.vertices = __verts.ToArray(Vector3) as Vector3[];
+		mesh.vertices = __verts.ToArray(Vector3) as Vector3[];
 		mesh.colors = __colors.ToArray(Color) as Color[];
 		original_colors = __colors;
 		mesh.normals = __normals.ToArray(Vector3) as Vector3[];
